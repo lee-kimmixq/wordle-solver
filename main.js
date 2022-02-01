@@ -34,6 +34,7 @@ const lockOrCheckRow = (lockBtn) => {
       });
     });
     lockBtn.innerText = "CHECK";
+    lockBtn.classList.replace("btn-outline-warning", "btn-outline-success");
     document.querySelector("#msg-div").innerHTML = "";
   } else if (lockBtn.innerText === "CHECK") {
     const colourArr = ["B", "B", "B", "B", "B"];
@@ -48,6 +49,7 @@ const lockOrCheckRow = (lockBtn) => {
       }
     });
     lockBtn.innerText = "";
+    lockBtn.classList.replace("btn-outline-success", "btn-dark");
     analyseAns(ansWord, colourArr);
   }
 };
@@ -88,6 +90,8 @@ const initBoard = () => {
     const lockBtn = document.createElement("button");
     newRow.appendChild(lockBtn);
     lockBtn.classList.add("col");
+    lockBtn.classList.add("btn");
+    lockBtn.classList.add("btn-outline-warning");
     lockBtn.id = `btn${i}`;
     lockBtn.innerText = "LOCK";
     lockBtn.addEventListener("click", (event) => {

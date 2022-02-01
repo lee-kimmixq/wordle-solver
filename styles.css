@@ -7,6 +7,15 @@ h1 {
   text-align: center;
 }
 
+#instr {
+  max-width: 45%;
+  margin-bottom: 3%;
+}
+
+#instr p {
+  margin: 0;
+}
+
 .ans-row {
   border-color: #f8edeb;
 }

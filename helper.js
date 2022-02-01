@@ -8,6 +8,85 @@ const getAllIndexes = (word, idx) => {
   return indexes;
 };
 
+const getIdxOfClosestNum = (arr, goal, except) => {
+  const num = arr.reduce((prev, curr) =>
+    !except.includes(curr) && Math.abs(curr - goal) < Math.abs(prev - goal)
+      ? curr
+      : prev
+  );
+  return arr.indexOf(num);
+};
+
+const getTryArr = (tally, arr, diff) => {
+  const arr2 = [...arr];
+  const wordsToRemove = [];
+  arr2.forEach((word) => {
+    if (!word.includes(diff)) {
+      wordsToRemove.push(word);
+    }
+  });
+  wordsToRemove.forEach((word) => {
+    arr2.splice(arr2.indexOf(word), 1);
+  });
+  return arr2;
+};
+
+const analysePosAns = (posArr) => {
+  const tryArr = [...posArr];
+  const ltrTally = {};
+  tryArr.forEach((word) => {
+    const ltrArr = word.split("");
+    const uniqueArr = [];
+    ltrArr.forEach((ltr) => {
+      if (!uniqueArr.includes(ltr)) {
+        uniqueArr.push(ltr);
+      }
+    });
+    uniqueArr.forEach((ltr) => {
+      if (ltr in ltrTally) {
+        ltrTally[ltr] += 1;
+      } else {
+        ltrTally[ltr] = 1;
+      }
+    });
+  });
+  console.log(ltrTally);
+  const except = [];
+  const diffLtr =
+    Object.keys(ltrTally)[
+      getIdxOfClosestNum(Object.values(ltrTally), tryArr.length / 2, except)
+    ];
+  except.push(ltrTally[diffLtr]);
+  console.log(except);
+  console.log(diffLtr, ltrTally[diffLtr]);
+  const tryArr2 = getTryArr(ltrTally, tryArr, diffLtr);
+  console.log(tryArr2);
+  if (tryArr2.length === 0) return tryArr;
+  if (tryArr2.length === 1) return tryArr2;
+  const diffLtr2 =
+    Object.keys(ltrTally)[
+      getIdxOfClosestNum(Object.values(ltrTally), tryArr.length / 2, except)
+    ];
+  except.push(ltrTally[diffLtr2]);
+  console.log(except);
+  console.log(diffLtr2, ltrTally[diffLtr2]);
+  const tryArr3 = getTryArr(ltrTally, tryArr2, diffLtr2);
+  console.log(tryArr3);
+  if (tryArr3.length === 0) return tryArr2;
+  if (tryArr3.length === 1) return tryArr3;
+  const diffLtr3 =
+    Object.keys(ltrTally)[
+      getIdxOfClosestNum(Object.values(ltrTally), tryArr.length / 2, except)
+    ];
+  except.push(ltrTally[diffLtr3]);
+  console.log(except);
+  console.log(diffLtr3, ltrTally[diffLtr3]);
+  const tryArr4 = getTryArr(ltrTally, tryArr3, diffLtr3);
+  console.log(tryArr4);
+  if (tryArr4.length === 0) return tryArr3;
+  return tryArr4;
+};
+
 const analyseAns = (curWord, curColours) => {
   const wrongLtrs = [];
   const mustLtrs = [];
@@ -103,10 +182,18 @@ const analyseAns = (curWord, curColours) => {
       possibleAnsArr.splice(possibleAnsArr.indexOf(word), 1);
     });
   });
+  const wordsToTry = analysePosAns(possibleAnsArr);
+  console.log("words to try:", wordsToTry);
+  document.querySelector(
+    "#msg-div"
+  ).innerHTML += `<br> ** WORDS TO TRY (${wordsToTry.length}): <br>`;
+  wordsToTry.forEach((ans) => {
+    document.querySelector("#msg-div").innerHTML += `${ans}  `;
+  });
   console.log("possible ans:", possibleAnsArr);
   document.querySelector(
     "#msg-div"
-  ).innerHTML += `<br> ** POSSIBLE ANSWERS (${possibleAnsArr.length}): <br>`;
+  ).innerHTML += `<br><br> ** ALL POSSIBLE ANSWERS (${possibleAnsArr.length}): <br>`;
   possibleAnsArr.forEach((ans) => {
     document.querySelector("#msg-div").innerHTML += `${ans}  `;
   });
