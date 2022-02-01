@@ -1,0 +1,38 @@
+body {
+  background-color: #161616;
+}
+
+h1 {
+  color: white;
+  text-align: center;
+}
+
+.ans-row {
+  border-color: #f8edeb;
+}
+
+.input-box {
+  color: white;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.colour-bl {
+  background-color: #161616;
+}
+
+.colour-yl {
+  background-color: #af953e;
+}
+
+.colour-gr {
+  background-color: #3e8249;
+}
+
+#msg-div {
+  border-width: 1px;
+  border-color: #f8edeb;
+  height: 50vh;
+  color: white;
+  font-family: "Courier New", Courier, monospace;
+}
