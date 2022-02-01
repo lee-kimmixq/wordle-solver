@@ -1,17 +1,44 @@
 const possibleAnsArr = [...ansArr];
 
+const getAllIndexes = (word, idx) => {
+  const indexes = [];
+  for (let i = 0; i < word.length; i += 1) {
+    if (word[i] === word[idx] && i !== idx) indexes.push(i);
+  }
+  return indexes;
+};
+
 const analyseAns = (curWord, curColours) => {
   const wrongLtrs = [];
   const mustLtrs = [];
   const ansData = [[], [], [], [], []];
 
+  var temp = "This is a string.";
+  const toMatch = "is";
+  const regex = new RegExp(`${toMatch}`, "g");
+  console.log(regex);
+  var count = (temp.match(regex) || []).length;
+  console.log(count);
+
   // update data
   curColours.forEach((colour, idx) => {
-    if (colour === "B" && !wrongLtrs.includes(curWord[idx])) {
-      wrongLtrs.push(curWord[idx]);
+    const letterToMatch = new RegExp(`${curWord[idx]}`, "g");
+    const numLtrsInWord = (curWord.match(letterToMatch) || []).length;
+    let haveOtherYG = false;
+    getAllIndexes(curWord, idx).forEach((index) => {
+      if (curColours[index] === "Y" || curColours[index] === "G") {
+        haveOtherYG = true;
+      }
+    });
+    if (
+      colour === "B" &&
+      !wrongLtrs.includes(curWord[idx]) &&
+      (numLtrsInWord < 2 || (numLtrsInWord > 1 && !haveOtherYG))
+    ) {
+      wrongLtrs.push(curWord[idx]); // letter is WRONG if colour = B and (no other occurence or other occurence not yg)
     } else if (colour === "Y") {
-      ansData[idx].push(curWord[idx]);
-      mustLtrs.push(curWord[idx]);
+      ansData[idx].push(curWord[idx]); // letter at WRONG POS
+      mustLtrs.push(curWord[idx]); // letter needs to exist in word
     } else if (colour === "G") {
       // remove words that dont have 'green' letters in the right place
       const wordsToRemoveGr = [];
@@ -27,7 +54,7 @@ const analyseAns = (curWord, curColours) => {
   });
   curColours.forEach((colour, idx) => {
     if (colour === "G") {
-      ansData[idx] = [];
+      ansData[idx] = []; // clear ansData for green pos
     }
   });
   // remove wrong word
@@ -51,7 +78,7 @@ const analyseAns = (curWord, curColours) => {
   });
 
   ansData.forEach((pos, idx) => {
-    // remove words that contain 'yellow' letters in the place
+    // remove words that contain 'yellow' letters in the wrong place
     const wordsToRemoveYl = [];
     possibleAnsArr.forEach((word) => {
       pos.forEach((ltr) => {
@@ -77,8 +104,9 @@ const analyseAns = (curWord, curColours) => {
     });
   });
   console.log("possible ans:", possibleAnsArr);
-  document.querySelector("#msg-div").innerHTML +=
-    "<br> ** POSSIBLE ANSWERS: <br>";
+  document.querySelector(
+    "#msg-div"
+  ).innerHTML += `<br> ** POSSIBLE ANSWERS (${possibleAnsArr.length}): <br>`;
   possibleAnsArr.forEach((ans) => {
     document.querySelector("#msg-div").innerHTML += `${ans}  `;
   });
