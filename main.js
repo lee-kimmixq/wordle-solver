@@ -77,6 +77,11 @@ const initBoard = () => {
       newInputBox.setAttribute("maxlength", "1");
       newInputBox.setAttribute("required", "true");
       newInputBox.onkeyup = (e) => {
+        if (e.key === "Backspace" || e.code === "Backspace") {
+          document
+            .querySelector(`#box${Number(e.target.id.slice(3)) - 1}`)
+            .focus();
+        }
         if (
           e.target.value.length >= 1 &&
           Number(e.target.id.slice(3)) % 5 !== 4
